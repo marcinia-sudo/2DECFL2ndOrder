@@ -26,7 +26,7 @@ $(info ${VERSION})
 
 
 
-# XSEDE
+# ACCESS
 DEBUG = -Wall -ansi -std=c11
 CFLAGS = -I/opt/gsl/2.1/gnu/include 
 LDFLAGS = -L/opt/gsl/2.1/gnu/lib
