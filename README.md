@@ -1,2 +1,2 @@
 # 2DECFL2ndOrder
-A computation of two dimensional Extremely Correlated Fermi Liquid Green's function to 2nd Order in lambda 
+This progam  computes the two dimensional Extremely Correlated Fermi Liquid Green's function to 2nd Order in $\lambda$ expasion
