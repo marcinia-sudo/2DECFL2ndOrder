@@ -1,7 +1,7 @@
 # 2DECFL2ndOrder
 This progam computes the two dimensional [Extremely Correlated Fermi Liquid](https://physics-legacy.pbsci.ucsc.edu/~sriram/papers/paper_144.pdf) (ECFL) Theory Green's function to 2nd Order in the $\lambda$ expansion.
 
-![Spectrum.png](:/52584049c0d04f7d97523449dbcd89da)
+![Spectrum.png](images/Spectrum.png)
 
 # Requirements
 This program requires the [GNU gsl](https://www.gnu.org/software/gsl/) and Intel MKL. This program is tested with MKL integrated with [Intel Parallel Studio XE package.](https://www.intel.com/content/www/us/en/developer/articles/guide/download-documentation-intel-parallel-studio-xe-current-previous.html)  
