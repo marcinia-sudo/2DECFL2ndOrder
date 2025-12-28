@@ -12,9 +12,13 @@ done
 
 declare -a pmatrix
 # parameter set
-# d L nd tau tp tpp J mup u0 neta dom 
+# d Nk nd tau tp tpp J mup u0 neta dom 
 
 pmatrix[0]="12 16 0.75 0.057 -0.2 0.0 0.17 -0.78 0.69 7 20"
+pmatrix[1]="12 16 0.75 0.057 -0.2 0.0 0.17 -0.78 0.69 7 20"
+pmatrix[2]="12 16 0.75 0.057 -0.2 0.0 0.17 -0.78 0.69 7 20"
+
+
 
 
 
@@ -25,7 +29,6 @@ echo $N
 for ((i=0; i<$N; i++))
 do
     echo $i
-#    Hello.out ${pmatrix[$i]}
     params.out ${pmatrix[$i]} # >> log.txt &
     wait $!
 

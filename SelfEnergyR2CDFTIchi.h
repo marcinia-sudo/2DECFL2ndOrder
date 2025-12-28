@@ -654,7 +654,7 @@ MKL_INT self_energy(void *params)
 
 
     // chi_66b(k) = -2 lambda (epsilon_p - u0/2 + 1/2 J_{k-p}) * (epsilon_{p + q - k} - u0/2 + 1/2 J_{k-q}) ggg
-    // chi_66a(k) = -2 lambda (epsilon_{p + q - k} - u0/2 + 1/2 J_{k-p}) (1/2 J_{p-k}) ggg
+    // chi_67a(k) = -2 lambda (epsilon_{p + q - k} - u0/2 + 1/2 J_{k-p}) (1/2 J_{p-k}) ggg
     // chi(k) = -(2 epsilon_p - u0 + J_{k-p)) * (epsilon_{p + q - k} - u0/2 + 1/2(J_{k-q} + J_{k-p}) ggg
 
 
@@ -1093,7 +1093,7 @@ MKL_INT self_energy(void *params)
 
 
     // chi_66b(k) = -2(epsilon_p - u0/2 + 1/2 J_{k-p}) * (epsilon_{p + q - k} - u0/2 + 1/2 J_{k-q}) ggg
-    // chi_66a(k) = -2(epsilon_{p + q - k} - u0/2 + 1/2 J_{k-p}) (1/2 J_{p-k}) ggg
+    // chi_67a(k) = -2(epsilon_{p + q - k} - u0/2 + 1/2 J_{k-p}) (1/2 J_{p-k}) ggg
 
 
     /*
