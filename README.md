@@ -7,7 +7,7 @@ This program follows the minimal theory for two-dimensional ECFL as explored in 
 
 
 # The spectral function of ECLF theory
-![Spectrum.png](images/Spectrum.png)
+![Spectrum.png](images/SpectrumII.png)
 
 # System Requirements
 This program requires the [GNU gsl](https://www.gnu.org/software/gsl/) package and Intel MKL package included with [Intel Parallel Studio XE package.](https://www.intel.com/content/www/us/en/developer/articles/guide/download-documentation-intel-parallel-studio-xe-current-previous.html)  
