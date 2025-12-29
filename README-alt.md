@@ -1,5 +1,5 @@
 # 2DECFL2ndOrder
-The $t$-$J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of lattice Fermions in the $t$-$J$ model[^2].  
+The $t$ - $J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of lattice Fermions in the $t$ - $J$ model[^2].  
 
 This progam computes the one-electron Green's function characterized by two-dimensional ECFL theory to 2nd order in the [$\lambda$ expansion](https://doi.org/10.1016/j.aop.2015.03.010) as detailed in Ref.[^1]. 
 
@@ -17,7 +17,7 @@ This program requires the [GNU gsl](https://www.gnu.org/software/gsl/) package a
 
 
 The program uses the **icc** compiler. The **icc** compiler is included in the intel Parallel Studio XE download.  To compile, run the following command in a terminal emulator. The makefile will have to be manually set up to properly link to the gsl and mkl packages on your system. 
-```
+```bash
 $ make CompRhoGParams
 
 ```
@@ -39,7 +39,7 @@ $dom$ is the size of the $\omega$ domain
 
 
 ### To run the program 
-```
+```bash
 # parameter set
 # d Nk nd tau tp tpp J mup u0 neta dom 
 
@@ -74,17 +74,19 @@ SelfEnergyR2CDFTIchi.h | A computation of the self energies equations of ECFL 2D
 
 **RAM Requirements**
 The RAM usage in bytes on a single machine with shared memory scales approximately like  
+
 $$
 \begin{align*}
 \text{mem} &= 8 \cdot [22 \cdot  N_k^2 N_\omega + 60 \cdot N_k^2 (4 N_\omega / 2 +1)  ] \\
 &\approx 1136  \cdot N_k^2N_\omega\;.
 \end{align*}
 $$
+
 ## Flow Diagram
 
 ```mermaid
 graph TD;
-A(["Set Up Parameters"]) --> B["Initial Green's function" ];
+A["Set Up Parameters"] --> B["Initial Green's function" ];
 B --> C["Self Energies"];
 C --> D["Hilbert Transformation"]
 D --> E["Green's Functions"]
@@ -93,42 +95,55 @@ F --> G["Tukey Window"]
 G --> H["Weighted Average"]
 H --> I["Convergence Test"]
 I --> |"False"| C
-I --> |"True" | J(["Compute Data"])
+I --> |"True" | J["Compute Data"]
 
 
 
 ```
 
 # ECFL Equations 
+
 BEWARE!!! There be maths beyond this point. For the mathophiles out there, we will go through the flow diagram step by step and examine what this algorthm calculates in detail. 
 
 **Set Up**
-In this section (see CompRhoG.c), we set the parameters of  $t$-$t'$-$t''$-$J$ model,  such as the $N_\omega$ the size of frequency grid, the number of sites $N_k$ per dimension, density $n_d$, temperature $\tau$, etc. We also compute the data array for $\omega$ and $\vec{k}$ and various properties of the system, Fermi Energy $E_F$ and Fermi momentum $k_F$.
+
+In this section (see CompRhoG.c), we set the parameters of  $t$- $t'$- $t''$- $J$ model,  such as the $N_\omega$ the size of frequency grid, the number of sites $N_k$ per dimension, density $n_d$, temperature $\tau$, etc. We also compute the data array for $\omega$ and $\vec{k}$ and various properties of the system, Fermi Energy $E_F$ and Fermi momentum $k_F$.
 
 **Initial Green's Function**
+
 The initial auxillary Green's function, $g_0$,  is an initial for the spectral function $\rho_\mathbf{g}(k)$ using Lorentz function in the form:
+
 $$
 \mathbf{g}_0(\vec{k}, \omega ) = \frac{1}{\pi}\frac{\Gamma / 2}{(x - x_0)^2 + (\Gamma/2)^2}
 $$
+
 where $x=\omega$, $x_0 = \epsilon_k - \mu'_0$, and $\Gamma = 2^{\eta}\Delta \omega$. In terms of the program parameters $\mu'_o$ is *mup_initial* and $\eta$ is *neta*.  
 
 **Self Energies**
-In the header file, SelfEnergyR2CDFTIchi.h, we compute the self energies, $\psi(\vec{k},\omega)$ and $\chi(\vec{k}, \omega)$, up to 2nd order in the $\lambda$ expansion. We will explain the motivation for calculating these self energies in the sections that follow. For now we will concern ourselves with their calculation. Specifically we calculate $\psi$ from Eq. 65(a) and  $\chi$ from Eqs. 66(a) & 66(b) and Eq. 67(a) of Ref.[^1]. We apply following change of variables $k=k'$, $p=p'$, and $q=p'+q'-k'$ to the self-energies, and drop the prime afterwards, to obtain the following equations:
+
+In the header file, SelfEnergyR2CDFTIchi.h, we compute the self energies, $\displaystyle \psi(\vec{k},\omega )$ and $\displaystyle \chi(\vec{k}, \omega )$, up to 2nd order in the $\lambda$ expansion. We will explain the motivation for calculating these self energies in the sections that follow. For now we will concern ourselves with their calculation. Specifically we calculate $\psi$ from Eq. 65(a) and  $\chi$ from Eqs. 66(a) & 66(b) and Eq. 67(a) of Ref.[^1]. We apply following change of variables $k=k'$, $p=p'$, and $q=p'+q'-k'$ to the self-energies, and drop the prime afterwards, to obtain the following equations:
+
 $$
 \begin{align*}
 \psi_{[1]}^{65(a)}(k) &= -2\lambda\sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2} J_{\vec{k}-\vec{p}} \bigg ),\;\; &\text{Eq. 65(b)} \\
-
 \chi_{[0]}^{66(a)}(k) &=- \sum_{p} \mathbf{g}(p)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2}+\frac{1}{2}J_{\vec{k}-\vec{p}} \bigg ), \;\; &\text{Eq.~66(a)} \\
-
 \chi_{[1]}^{66(b)}(k) = &-2 \lambda \sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2}J_{\vec{k}-\vec{p}}\bigg ) \bigg ( \epsilon_{\vec{p}+\vec{q}-\vec{k}} - \frac{u_0}{2}  + \frac{1}{2}J_{\vec{k}-\vec{q}} \bigg ), \;\;&\text{Eq. 66(b)} \\
-
 \chi_{[1]}^{67(a)}(k) = &- \lambda \sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2}J_{\vec{k}-\vec{q}}\bigg ) \bigg ( J_{\vec{p}-\vec{k}} \bigg ) ,\;\; &\text{Eq. 67(a)} \\
 \end{align*}
 $$
-where $\sum_{k} =\frac{ 1}{\beta N_k^2}\sum_{\vec{k},\omega_k}$, $\epsilon_{\vec{k}}$ is the band energy, and $J_{\vec{k}} = 2 J \cos(k_x) + 2J \cos(k_y)$ and hence $J_{\vec{k}} = J_{-\vec{k}}$. To calculate the self-energy, we must express the green function $\mathbf{g}$ in terms of its spectral functions $\rho_\mathbf{g} = -1/\pi \Im m \{\mathbf{g}\}$:
+
+where 
+
+$$
+\displaystyle \sum_{k} = \frac{1}{\beta N_k^2} \sum_{\vec{k},\omega_k},
+$$
+
+$\epsilon_{\vec{k}}$ is the band energy, and $\displaystyle J_{\vec{k}} = 2 J \cos(k_x) + 2J \cos(k_y)$ and hence $\displaystyle J_{\vec{k}} = J_{-\vec{k}}$. To calculate the self-energy, we must express the green function $\mathbf{g}$ in terms of its spectral functions $`\rho_\mathbf{g} = -1/\pi \Im m \{ \mathbf{g} \}`$:
+
 $$
 \mathbf{g}(k) =\int_{-\infty}^{\infty} \frac{\rho_{\mathbf{g}} (\vec{k}, \nu)}{i\omega_k - \nu} \mathrm{d}\nu\;.
 $$
+
 We note that Eq. 66(a) is incoportated directly in the calculation of the Green's function which will show the sections that follow. Now we can evaluate the Matsubara sums to obtain the self-energies in the form: 
 $$
 \begin{align*}
@@ -147,6 +162,7 @@ $$
 where $\mathcal{F}$ is the Fourier transform operator, $\mathcal{F^{-1}}$ is its inverse, $\bar{\mathcal{F}}$ is its complex conjugate and the shorthand $l \equiv (\vec{l}, s) \to (p+q- k, u+v -\omega)$. We use DFTI fast Fourier transformation algorithm contained in mkl library to compute the Fourier transforms.
 
 **Hilbert Transformation**
+
 In this section we compute the real part of the self energies using Hilbert transformation. The Green's function is complex function of the form $\mathbf{g} = \mathbf{g}' + i \mathbf{g}''$ where $\mathbf{g}' \equiv \Re e\{\mathbf{g}\}$ and $\mathbf{g}'' \equiv \Im m \{\mathbf{g}\}$.  The Hilbert transformation is defined as 
 $$
 H[\rho_\mathbf{g}] = \text{P.V.} \int^{\infty}_{-\infty}\frac{\rho_{\mathbf{g}}(\vec{k},\nu)}{\omega - \nu} \mathrm{d}\nu
@@ -168,13 +184,8 @@ i \;\; &\text{if} &\omega < 0  \\
 $$
 where $\text{sgn}(\omega)$ is the signum function.
 
-
-
-
-
-
-
 **Greens' Functions**
+
 In the section, we calculate a canonical-like green's function $\mathbf{g}$ and the ECFL Green's function $\mathcal{G}$ to second order in the $\lambda$ expansion. 
 
 In brief,  the one-electron Greens functions in ECFL theory for momentum space is defined as
