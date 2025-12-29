@@ -1,9 +1,9 @@
 # 2DECFL2ndOrder
-The $t$ - $J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of lattice Fermions in the $t$ - $J$ model[^MS].  
+The $t$ - $J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of the lattice Fermions in the $t$ - $J$ model[^S].  
 
 This progam computes the one-electron Green's function characterized by two-dimensional ECFL theory to 2nd order in the [$`\lambda`$ expansion](https://doi.org/10.1016/j.aop.2015.03.010) as detailed in Ref.[^PS]. 
 
-This program follows the minimal theory for two-dimensional ECFL as explored in Ref.[^MS].  This program has been benchmarked in several studies including one on the elastoresistivity of very strongly correlated metals in two-dimensions as seen in Ref.[^AS], the dielectic response in two-dimensional strongly correlated metals as shown in Ref.[^SA], and the normal-state resistivity of cuprate superconductors (see Ref.[^SAS]). 
+This program follows the minimal theory for two-dimensional ECFL as explored in Ref.[^MS].  This program has been benchmarked in several studies including one on the elastoresistivity of very strongly correlated metals in two-dimensions as seen in Ref.[^AMS], the dielectic response in two-dimensional strongly correlated metals as shown in Ref.[^SA], and the normal-state resistivity of cuprate superconductors (see Ref.[^SAS]) where python notebooks containing the resistivity data for Tl2201, Bi2201 and Hg1201 cuprates and others are accessible from Ref.[^Zen]).
 
 
 # The spectral function of ECLF theory
@@ -14,8 +14,6 @@ This program requires the [GNU gsl](https://www.gnu.org/software/gsl/) package a
 
 
 #  Compilation
-
-
 The program uses the **icc** compiler. The **icc** compiler is included in the intel Parallel Studio XE download.  To compile, run the following command in a terminal emulator. The makefile will have to be manually set up to properly link to the gsl and mkl packages on your system. 
 ```bash
 $ make CompRhoGParams
@@ -24,7 +22,6 @@ $ make CompRhoGParams
 
  
 # Usage
-
 $d$, the exponent for the frequency grid \
 $N_\omega = 2^d$ is the size of the $\omega$ array which sets the linear density of the frequency grid\
 $N_k$ is the number lattice site per dimension\
@@ -40,7 +37,7 @@ $\eta$, i.e, neta, controls the width of the inital Green's function
 $dom$ is the size of the $\omega$ domain
 
 
-### To run the program 
+### To run the program
 ```bash
 # parameter set
 # d Nk nd tau tp tpp J mup u0 neta dom 
@@ -51,22 +48,20 @@ $ params.out "12 16 0.75 0.057 -0.2 0.0 0.17 -0.78 0.69 7 20"
 
 
 ### Package Breakdown
-
-
-**files in package**
+**List of files in package**
 File Name | Description 
 ----- | ----
 C_extension.h | Definitions and utility functions that build on the standard C library | N/A
 CompRhoGchi.c | Main program 
 CompRhoGchiParams.c | Variant of Main program that takes parameters as arguments
-ConvolutionchiBubWW.h | Defines the function to compute $\chi_{WW}$
-ConvolutionchiBubrhorho.h | Defines function to computer $\chi_{\rho\rho}$
+ConvolutionchiBubWW.h | Defines the function to compute $\chi_{WW}$[^SA]
+ConvolutionchiBubrhorho.h | Defines function to computer $\chi_{\rho\rho}$[^SA]
 HilbertTransformC2CDFTI.h | A variant form of the Hilbert Transform using C2C DFTI
 HilbertTransformR2CDFTI.h | A variant of the Hilbert Transform using R2C DFTI
 fftw_extension.h | Definitions and utility functions that build on the fftw library
 Functionschi.h | Functions specific to the main program
 go.sh | A bash script to run batches of the program with different parameters
-gsl_extension.h | Definitions and utility functions that build on the gsl library. 
+gsl_extension.h | Definitions and utility functions that build on the gsl library
 mkl_extension.h | Definition and utility functions that build on the mkl library
 Makefile | Makefile for compiling CompRhoGchi.c and CompRhoGchiParams.c
 MultirootFinder.h | Defines a function that uses GSL multiroot finder
@@ -74,7 +69,7 @@ RootFinder.h | Defines a function that uses GSL single root finder
 SelfEnergyR2CDFTIchi.h | A computation of the self energies equations of ECFL 2D second order theory
 
 
-**RAM Requirements**
+**RAM Requirements**\
 The RAM usage in bytes on a single machine with shared memory scales approximately like
 
 $$
@@ -107,19 +102,17 @@ I --> |"True" | J["Compute Data"]
 
 BEWARE!!! There be maths beyond this point. For the mathophiles out there, we will go through the flow diagram step by step and examine what this algorthm calculates in detail. 
 
-**Set Up**
+**Set Up**\
+In this section (see CompRhoG.c), we set the parameters of  $t$- $t'$- $t''$- $J$ model,  such as the $N_\omega$ the size of frequency grid, the number of sites $N_k$ per dimension, density $n_d$, temperature $\tau$, etc. We also compute the data array for $\omega$ and $\vec{k}$ and various properties of the system; Fermi Energy, $E_F$; and Fermi momentum, $k_F$.
 
-In this section (see CompRhoG.c), we set the parameters of  $t$- $t'$- $t''$- $J$ model,  such as the $N_\omega$ the size of frequency grid, the number of sites $N_k$ per dimension, density $n_d$, temperature $\tau$, etc. We also compute the data array for $\omega$ and $\vec{k}$ and various properties of the system, Fermi Energy $E_F$ and Fermi momentum $k_F$.
-\
-**Initial Green's Function**
-
+**Initial Green's Function**\
 The initial auxillary Green's function, $g_0$,  is an initial for the spectral function $\rho_\mathbf{g}(k)$ using Lorentz function in the form:
 
 ```math
 \mathbf{g}_0(\vec{k}, \omega ) = \frac{1}{\pi}\frac{\Gamma / 2}{(x - x_0)^2 + (\Gamma/2)^2}
 ```
 
-where $x=\omega$, $x_0 = \epsilon_k - \mu'_0$, and $\Gamma = 2^{\eta}\Delta \omega$. In terms of the program parameters $\mu'_o$ is *mup_initial* and $\eta$ is *neta*.  
+where $x=\omega$, $`\displaystyle x_0 = \epsilon_{\vec{k}} - \mu'_0`$, and $\Gamma = 2^{\eta}\Delta \omega$. In terms of the program parameters $\mu'_o$ is *mup_initial* and $\eta$ is *neta*.  
 
 **Self Energies**\
 In the header file, SelfEnergyR2CDFTIchi.h, we compute the self energies, $\displaystyle \psi(\vec{k},\omega )$ and $\displaystyle \chi(\vec{k}, \omega )$, up to 2nd order in the $\lambda$ expansion. We will explain the motivation for calculating these self energies in the sections that follow. For now we will concern ourselves with their calculation. Specifically we calculate $\psi$ from Eq. 65(a) and  $\chi$ from Eqs. 66(a) & 66(b) and Eq. 67(a) of Ref.[^PS]. We apply following change of variables $k=k'$, $p=p'$, and $q=p'+q'-k'$ to the self-energies, and drop the prime afterwards, to obtain the following equations:
@@ -218,7 +211,7 @@ In the second order approximation $\mathcal{O}(\lambda^2)$ the self energies are
 ```
 So the second order calculation is
 ```math
-\mathbf{g}(k)  = \mathbf{g}^{-1}_0 + \lambda \frac{n}{2}\epsilon_k' + \lambda \frac{n}{4}J_0 - \lambda\chi_{[0]}(k) - \lambda^2\chi_{[1]}(k) - \lambda^2 \psi_{[1]}(k)
+\mathbf{g}(k)  = \mathbf{g}^{-1}_0 + \lambda \frac{n}{2}\epsilon_{\vec{k}}' + \lambda \frac{n}{4}J_0 - \lambda\chi_{[0]}(k) - \lambda^2\chi_{[1]}(k) - \lambda^2 \psi_{[1]}(k)
 ```
 
 ```math
@@ -243,16 +236,15 @@ The Green's fucntions  of ECFL theory in terms of their spectral function and re
 ```
 where $`\displaystyle \rho_\phi = \rho_\chi + \epsilon_{\vec{k}}\,\rho_\psi`$ is spectral function for the canonical-like self energy, $`\displaystyle \text{re}_\phi = \text{re}_{\chi} + \epsilon_{\vec{k}}\,\text{re}_\psi`$ is its real part, and $`\displaystyle x = \omega + \mu' - \xi_{\vec{k}} - \text{re}_\phi`$. The effective band energy is
 ```math
-\xi_{\vec{k}}  = \epsilon_k ( 1 - \lambda \gamma) - \frac{1}{2}  \sum_k \mathbf{g}(k) J_{k-p}
+\xi_{\vec{k}}  = \epsilon_{\vec{k}} ( 1 - \lambda \gamma) - \frac{1}{2}  \sum_k \mathbf{g}(k) J_{\vec{k}-\vec{p}}
 ```
 and the effective chemical potential is
 ```math
-\mu' = \mu - \lambda \gamma \frac{u_0}{2} + \lambda \gamma \frac{J_0}{2} + \sum_k \mathbf{g}(k)  \bigg ( \epsilon_k - \frac{u_0}{2}\bigg )\;.
+\mu' = \mu - \lambda \gamma \frac{u_0}{2} + \lambda \gamma \frac{J_0}{2} + \sum_k \mathbf{g}(k)  \bigg ( \epsilon_{\vec{k}} - \frac{u_0}{2}\bigg )\;.
 ```
 
-**Sum Rules**
-
-In this section, we use a root finding program to find the chemical potentials $\mu'$ and $u_0$ that satisfies two sum rules using a multiroot finder header file.  In this program, we have two choices for the sum rules: 
+**Sum Rules**\
+In this section, we use a root finding program to find the chemical potentials $\mu'$ and $u_0$ that satisfies two sum rules using a multiroot finder header file. In this program, we have two choices for the sum rules: 
 
 1)  The particle sum rules which defined as 
 ```math
@@ -262,12 +254,12 @@ In this section, we use a root finding program to find the chemical potentials $
 ```math
 \begin{align*}
 \sum_k \mathcal{G}(k) e^{i\omega_k0^+} &= n/2 \\
-\sum_k \mathcal{G}(k) \bigg ( \omega + \mu - \epsilon_k \bigg )e^{i\omega0^{+}}  & = - J n^2 / 2
+\sum_k \mathcal{G}(k) \bigg ( \omega + \mu - \epsilon_{\vec{k}} \bigg )e^{i\omega0^{+}}  & = - J n^2 / 2
 \end{align*}
 ```
 where $\mu$ the chemical potential is
 ```math
-\mu = \mu' + \lambda \gamma \frac{u_0}{2} - \lambda \gamma \frac{J_0}{2} - \sum_k \mathbf{g}(k)  \bigg ( \epsilon_k - \frac{u_0}{2} \bigg )\;,
+\mu = \mu' + \lambda \gamma \frac{u_0}{2} - \lambda \gamma \frac{J_0}{2} - \sum_k \mathbf{g}(k)  \bigg ( \epsilon_{\vec{k}} - \frac{u_0}{2} \bigg )\;,
 ```
 where we note that 
 ```math
@@ -276,13 +268,13 @@ where we note that
 Now we will give a brief aside to explain how the effective chemical potential $\mu'$ is defined in our program.  The auxillary Green's function $\mathbf{g}(k)$ in the second order approximation $\mathcal{O}(\lambda^2)$ is defined as
 
 ```math
-\mathbf{g}(k)  = \mathbf{g}^{-1}_0 + \lambda \frac{n}{2}\epsilon_k' + \lambda \frac{n}{4}J_0 - \lambda\chi_{[0]}(k) - \lambda^2\chi_{[1]}(k) - \lambda^2 \epsilon_k'\psi_{[1]}(k) \\
+\mathbf{g}(k)  = \mathbf{g}^{-1}_0 + \lambda \frac{n}{2}\epsilon_{\vec{k}}' + \lambda \frac{n}{4}J_0 - \lambda\chi_{[0]}(k) - \lambda^2\chi_{[1]}(k) - \lambda^2 \epsilon_{\vec{k}}'\psi_{[1]}(k)
 ```
 
 where $\gamma = n/2$, and 
 
 ```math
-\chi_{[0]} = -\sum_{k}\mathbf{g}(k) \bigg ( \epsilon_k - \frac{u_0}{2} + \frac{1}{2}J_{k-p} \bigg )\;.
+\chi_{[0]} = -\sum_{k}\mathbf{g}(k) \bigg ( \epsilon_{\vec{k}} - \frac{u_0}{2} + \frac{1}{2}J_{\vec{k}-\vec{p}} \bigg )\;.
 ```
 
 We can write the auxillary Green's function in more succint form as
@@ -291,11 +283,11 @@ We can write the auxillary Green's function in more succint form as
 ```
 where $\mu'$ is the effective chemical potential and $\xi_k$ is the effective band energy.  In our program the effective chemical potential $\mu'$, i.e, in-program *mup*, is defined as
 ```math
-\mu' = \mu - \lambda \gamma \frac{u_0}{2} + \lambda \gamma \frac{J_0}{2} + \sum_k \mathbf{g}(k)  \bigg ( \epsilon_k - \frac{u_0}{2} \bigg )
+\mu' = \mu - \lambda \gamma \frac{u_0}{2} + \lambda \gamma \frac{J_0}{2} + \sum_k \mathbf{g}(k)  \bigg ( \epsilon_{\vec{k}} - \frac{u_0}{2} \bigg )
 ```
 and the effective band energy $\xi_{\vec{k}}$ is
 ```math
-\xi_\vec{k} = \epsilon_\vec{k} ( 1 - \lambda \gamma) - \frac{1}{2}  \sum_k \mathbf{g}(k) J_{\vec{k}-\vec{p}}\;.
+\xi_\vec{k} = \epsilon_{\vec{k}} ( 1 - \lambda \gamma) - \frac{1}{2}  \sum_k \mathbf{g}(k) J_{\vec{k}-\vec{p}}\;.
 ```
 
 
@@ -303,13 +295,12 @@ We can toggle between these two different sum rules with the following code foun
 ```c
 if (U0SUMRULE == ON) // ON --> u0 sum rules, OFF --> particle sum rules
 ```
-That is when  ``U0SUMRULE == ON``, we use the u0 sum rules, otherwise we use the particles sums. 
+That is when  ``U0SUMRULE == ON``, we use the u0 sum rules, otherwise we use the particle sums. 
 
-**Window Tukey**
-
+**Window Tukey**\
 In this section, we setup a high frequency cutoff on the spectral function $\rho_\mathbf{g}$. (See Ref.[^MS] for further details and motivation.) The  
 ```math
-\hat{\rho}_{\mathbf{g}}(k) = \frac{1}{N}W_T(\omega - \bar{\epsilon}_\vec{k}) \rho_g
+\hat{\rho}_{\mathbf{g}}(k) = \frac{1}{N}W_T(\omega - \bar{\epsilon}_{\vec{k}}) \rho_g
 ```
 where $W_T$, called the tukey window, is a smooth even function that is centered on the spectral peak, $`\bar{\epsilon}_{\vec{k}}`$, of the spectral function $`\rho_g(k)`$. The factor $N_k$ is the normalization condition $`\displaystyle \int \hat{\rho}_{\mathbf{g}}(\vec{k},\omega) \mathrm{d}\omega=1`$.
 
@@ -319,23 +310,21 @@ if (TUKEY == ON) // ON --> TUKEY WINDOW, OFF --> NO TUKEY WINDOW
 ```
 
 
-**Weighted Average**
-
+**Weighted Average**\
 In this section, we calculate the weighted average spectral function $\bar{\rho}_{g}(k)$ from pervious and current spectral fucntions; $`\rho_{\mathbf{g}}^{i}`$ and  $`\rho_{\mathbf{g}}^{i+1}`$, respectively, as follows: 
 ```math
 \bar{\rho}_{\mathbf{g}}^{\;i+1}(k) = w \rho_{g}^{i}(k) +  (1 - w) \rho^{i+1}_{\mathbf{g}} 
 ```
 where $w$ is the weight where $0 \leq w < 1$ and $w = 1/\sqrt{3}$ is a typical choice for the weight.
 
-**Test Convergence condition**
-
+**Convergence Test**\
 We are satisfied that auxillary spectral function $`\rho^{i+1}_{\mathbf{g}}(k)`$ is converged if 
 ```math
 g_{error} = \frac{1}{N_k^2 N_\omega}\sum_{\vec{k}\bar{\omega}_n}|\rho^{i}_{\mathbf{g}}(\vec{k},\bar{\omega}_n) -\rho^{i+1}_{\mathbf{g}}(\vec{k},\bar{\omega}_n)| < 10^{-6}
 ```
-where $`\bar{\omega}_n`$ is the index for the freqency grid. If true, we exit the loop and goto **Compute Data** section. If false we send $`\bar{\rho}_\mathbf{g}^{\;i+1}`$ back to **Compute Self Energies** section.[^PS] 
+where $`\bar{\omega}_n`$ is the index for the freqency grid. If true, we exit the loop and goto **Compute Data** section. If false we send $`\bar{\rho}_\mathbf{g}^{\;i+1}`$ back to **Self Energies** section.[^PS] 
 
-**Compute Data**
+**Compute Data**\
 In this section we calculate $\rho_\mathcal{G}$ and we calcualate various properties of system with extremely strong correlations as characterized by the $t$ - $J$ Model.  The data exported to directory *Data* and mathematica notebook we a few example plots. 
 
 
@@ -343,9 +332,11 @@ In this section we calculate $\rho_\mathcal{G}$ and we calcualate various proper
 GSL
 
 # Bibliography
-
+[^S]: B. S. Shastry  [Phys. Rev. Lett. 107 056403, (2011)](https://doi.org/10.1103/PhysRevLett.107.056403),  B. S. Shastry [Ann. Phys.  343 164–99, (2014)](https://doi.org/10.1016/j.aop.2014.02.005), B. S. Shastry [Ann. Phys. 373 717–8, (2016)](https://doi.org/10.1016/j.aop.2016.08.015) 
 [^PS]: E. Perepelitsky and B. S. Shastry, [Ann. Phys. **357**, 1-39 (2015)](https://doi.org/10.1016/j.aop.2015.03.010)
 [^MS]: P. Mai and B. S. Shastry, [New J. Phys **20** (2018) 013027](  https://doi.org/10.1088/1367-2630/aa9b74)
 [^AMS]: M. Arciniaga, P. Mai, and B. S. Shastry [Phys. Rev. B. **101**, 2451149 (2020)](https://doi.org/10.1103/PhysRevB.101.245149)
 [^SA]: B.S. Shastry and M. Arciniaga, [Ann. Phys. **442** (2022) 168924](https://doi.org/10.1016/j.aop.2022.168924)
 [^SAS]: S. Shears, M. Arciniaga, and B. S. Shastry [Phys. Rev. B **111** 245146](https://doi.org/10.1103/89cj-5qhs)
+[^Zen]: S. Shears, M. Arciniaga, and B. S. Shastry [Aspects of the normal state resistivity of cuprate superconductors Bi2201, Tl2201,
+and Hg1201 (Data set) Zenodo](https://doi.org/10.5281/zenodo.15306960)
