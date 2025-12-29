@@ -73,7 +73,7 @@ SelfEnergyR2CDFTIchi.h | A computation of the self energies equations of ECFL 2D
 
 
 **RAM Requirements**
-The RAM usage in bytes on a single machine with shared memory scales approximately like  
+The RAM usage in bytes on a single machine with shared memory scales approximately like
 
 $$
 \begin{align*}
@@ -108,7 +108,7 @@ BEWARE!!! There be maths beyond this point. For the mathophiles out there, we wi
 **Set Up**
 
 In this section (see CompRhoG.c), we set the parameters of  $t$- $t'$- $t''$- $J$ model,  such as the $N_\omega$ the size of frequency grid, the number of sites $N_k$ per dimension, density $n_d$, temperature $\tau$, etc. We also compute the data array for $\omega$ and $\vec{k}$ and various properties of the system, Fermi Energy $E_F$ and Fermi momentum $k_F$.
-
+\
 **Initial Green's Function**
 
 The initial auxillary Green's function, $g_0$,  is an initial for the spectral function $\rho_\mathbf{g}(k)$ using Lorentz function in the form:
@@ -123,65 +123,72 @@ where $x=\omega$, $x_0 = \epsilon_k - \mu'_0$, and $\Gamma = 2^{\eta}\Delta \ome
 
 In the header file, SelfEnergyR2CDFTIchi.h, we compute the self energies, $\displaystyle \psi(\vec{k},\omega )$ and $\displaystyle \chi(\vec{k}, \omega )$, up to 2nd order in the $\lambda$ expansion. We will explain the motivation for calculating these self energies in the sections that follow. For now we will concern ourselves with their calculation. Specifically we calculate $\psi$ from Eq. 65(a) and  $\chi$ from Eqs. 66(a) & 66(b) and Eq. 67(a) of Ref.[^1]. We apply following change of variables $k=k'$, $p=p'$, and $q=p'+q'-k'$ to the self-energies, and drop the prime afterwards, to obtain the following equations:
 
-$$
+```math
 \begin{align*}
 \psi_{[1]}^{65(a)}(k) &= -2\lambda\sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2} J_{\vec{k}-\vec{p}} \bigg ),\;\; &\text{Eq. 65(b)} \\
 \chi_{[0]}^{66(a)}(k) &=- \sum_{p} \mathbf{g}(p)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2}+\frac{1}{2}J_{\vec{k}-\vec{p}} \bigg ), \;\; &\text{Eq.~66(a)} \\
-\chi_{[1]}^{66(b)}(k) = &-2 \lambda \sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2}J_{\vec{k}-\vec{p}}\bigg ) \bigg ( \epsilon_{\vec{p}+\vec{q}-\vec{k}} - \frac{u_0}{2}  + \frac{1}{2}J_{\vec{k}-\vec{q}} \bigg ), \;\;&\text{Eq. 66(b)} \\
-\chi_{[1]}^{67(a)}(k) = &- \lambda \sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2}J_{\vec{k}-\vec{q}}\bigg ) \bigg ( J_{\vec{p}-\vec{k}} \bigg ) ,\;\; &\text{Eq. 67(a)} \\
+\chi_{[1]}^{66(b)}(k) &= -2 \lambda \sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2}J_{\vec{k}-\vec{p}}\bigg ) \bigg ( \epsilon_{\vec{p}+\vec{q}-\vec{k}} - \frac{u_0}{2}  + \frac{1}{2}J_{\vec{k}-\vec{q}} \bigg ), \;\;&\text{Eq. 66(b)} \\
+\chi_{[1]}^{67(a)}(k) &= - \lambda \sum_{pq}\mathbf{g}(p)\mathbf{g}(q)\mathbf{g}(p+q-k)\bigg ( \epsilon_{\vec{p}} - \frac{u_0}{2} + \frac{1}{2}J_{\vec{k}-\vec{q}}\bigg ) \bigg ( J_{\vec{p}-\vec{k}} \bigg ) ,\;\; &\text{Eq. 67(a)} \\
 \end{align*}
-$$
+```
 
 where 
 
-$$
-\displaystyle \sum_{k} = \frac{1}{\beta N_k^2} \sum_{\vec{k},\omega_k},
-$$
+$$ \sum_{k} = \frac{1}{\beta N_k^2} \sum_{\vec{k},\omega_k} $$
 
 $\epsilon_{\vec{k}}$ is the band energy, and $\displaystyle J_{\vec{k}} = 2 J \cos(k_x) + 2J \cos(k_y)$ and hence $\displaystyle J_{\vec{k}} = J_{-\vec{k}}$. To calculate the self-energy, we must express the green function $\mathbf{g}$ in terms of its spectral functions $`\rho_\mathbf{g} = -1/\pi \Im m \{ \mathbf{g} \}`$:
 
-$$
+```math
 \mathbf{g}(k) =\int_{-\infty}^{\infty} \frac{\rho_{\mathbf{g}} (\vec{k}, \nu)}{i\omega_k - \nu} \mathrm{d}\nu\;.
-$$
+```
 
 We note that Eq. 66(a) is incoportated directly in the calculation of the Green's function which will show the sections that follow. Now we can evaluate the Matsubara sums to obtain the self-energies in the form: 
-$$
+
+```math
 \begin{align*}
 \rho_{\Sigma}(\vec{k}, \omega) &= - \frac{1}{N_s^2} \sum_{\vec{q},\vec{p}} \int_{-\infty}^{\infty}\mathrm{d}v \int_{-\infty}^{\infty}\mathrm{d}u\rho_g(\vec{p},v)\rho_g(\vec{q},u)\rho_g(\vec{k}+\vec{q}-\vec{p},\omega + u - v) \\
 &\times[\bar{n}_F(v)n_F(u)\bar{n}_F(\omega + u - v) \\
 & + n_F(v) \bar{n}_F(u) n_F(\omega + u - v)] \bigg ( \cdots  \bigg ) 
 \end{align*}
-$$
+```
+
 where $\Sigma$ is an arbitary self-energy in form of a double convoluted integral, $n_F$ is the Fermi distribution, $\bar{n}_F$ denotes its complex conguate and $N_s = N_k^2$ . We evaluate the double convolution intergal, using convolution theorem, i.e, a Fourier transformation trick: 
-$$
+
+```math
 \begin{align*}
-\rho_{\Sigma}(\vec{q},\omega) &= - \frac{1}{N^2_s} \sum_{\vec{p},\vec{q}} \mathcal{F}^{-1}\Big \{ \mathcal{F}[\rho_g(p)\cdot n_F(u)]\mathcal{F}[\rho_g(q) \cdot n_F(u)]\bar{\mathcal{F}}[\rho_g(l) \cdot n_F(s)]\\
+\rho_{\Sigma}(\vec{q},\omega) &= - \frac{1}{N^2_s} \sum_{\vec{p},\vec{q}} \mathcal{F}^{-1} \Big \{ \mathcal{F}[\rho_g(p)\cdot n_F(u)]\mathcal{F}[\rho_g(q) \cdot n_F(u)]\bar{\mathcal{F}}[\rho_g(l) \cdot n_F(s)]\\
 &+\mathcal{F}[\rho_g(p) \cdot n_F(v)]\mathcal{F}[\rho_g(q)\cdot n_F(u)]\bar{\mathcal{F}}[\rho_g(l) \cdot n_F(s)] \Big \} \bigg ( \cdots \bigg ) 
 \end{align*}
-$$
-where $\mathcal{F}$ is the Fourier transform operator, $\mathcal{F^{-1}}$ is its inverse, $\bar{\mathcal{F}}$ is its complex conjugate and the shorthand $l \equiv (\vec{l}, s) \to (p+q- k, u+v -\omega)$. We use DFTI fast Fourier transformation algorithm contained in mkl library to compute the Fourier transforms.
+```
+
+where $\mathcal{F}$ is the Fourier transform operator, $\mathcal{F^{-1}}$ is its inverse, $\bar{\mathcal{F}}$ is its complex conjugate and the shorthand $$\displaystyle l \equiv (\vec{l}, s) \to (p + q - k, u + v -\omega )$$ . We use DFTI fast Fourier transformation algorithm contained in mkl library to compute the Fourier transforms.
 
 **Hilbert Transformation**
 
-In this section we compute the real part of the self energies using Hilbert transformation. The Green's function is complex function of the form $\mathbf{g} = \mathbf{g}' + i \mathbf{g}''$ where $\mathbf{g}' \equiv \Re e\{\mathbf{g}\}$ and $\mathbf{g}'' \equiv \Im m \{\mathbf{g}\}$.  The Hilbert transformation is defined as 
-$$
+In this section we compute the real part of the self energies using Hilbert transformation. The Green's function is complex function of the form $\mathbf{g} = \mathbf{g}' + i \mathbf{g}''$ where $`\mathbf{g}' \equiv \Re e\{\mathbf{g}\}`$ and $`\mathbf{g}'' \equiv \Im m \{\mathbf{g}\}`$.  The Hilbert transformation is defined as 
+
+```math
 H[\rho_\mathbf{g}] = \text{P.V.} \int^{\infty}_{-\infty}\frac{\rho_{\mathbf{g}}(\vec{k},\nu)}{\omega - \nu} \mathrm{d}\nu
-$$
-where  we plug in the spectral fucntion $\rho_g = -1/\pi \Im m\{\mathbf{g}\}$ and we get out $\text{re}_\mathbf{g} = \Re e\{\mathbf{g}\} = H[\rho_\mathbf{g}]$ where $\text{re}_{\mathbf{g}}(\vec{k},\omega)$ is the in-program notation the real part of the green's function.
+```
+
+where we plug in the spectral fucntion $`\rho_g = -1/\pi \Im m\{\mathbf{g}\}`$ and we get out $`\text{re}_\mathbf{g} = \Re e\{\mathbf{g}\} = H[\rho_\mathbf{g}]`$ where $`\displaystyle \text{re}_{\mathbf{g}}(\vec{k},\omega)`$ is the in-program notation the real part of the Green's function.
 
 
 Using convolution theorem, we can evalute this intergal using Fourier transformations:
-$$
+
+```math
 H[\rho_g(\vec{k},\omega)] = \mathcal{F}^{-1} \bigg \{ \mathcal{F}[\rho_\mathcal{g}(\vec{k},\nu)]\mathcal{F} \bigg [ \frac{1}{\omega- \nu}\bigg ] \bigg \}\;.
-$$
+```
+
 The Fourier transformation of the term on the right is
-$$
+
+```math
 \mathcal{F}\bigg[ \frac{1}{\omega - \nu}\bigg] =-i\cdot\text{sgn}(\omega) = \begin{cases}
 i \;\; &\text{if} &\omega < 0  \\
 0 \;\; &\text{if} &\omega = 0 \\
  -i \;\; &\text{if} &\omega > 0  
 \end{cases}
-$$
+```
 where $\text{sgn}(\omega)$ is the signum function.
 
 **Greens' Functions**
