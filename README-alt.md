@@ -7,7 +7,7 @@ This program follows the minimal theory for two-dimensional ECFL as explored in 
 
 
 # The spectral function of ECLF theory
-![Spectrum.png](:/52584049c0d04f7d97523449dbcd89da)
+![Spectrum.png](/image/Spectrum.png)
 
 # System Requirements
 This program requires the [GNU gsl](https://www.gnu.org/software/gsl/) package and Intel MKL package included with [Intel Parallel Studio XE package.](https://www.intel.com/content/www/us/en/developer/articles/guide/download-documentation-intel-parallel-studio-xe-current-previous.html)  
@@ -101,10 +101,10 @@ I --> |"True" | J["Compute Data"]
 
 # ECFL Equations 
 
-BEWARE!!! There be maths beyond this point. For the mathophiles out there, we will go through the flow diagram step by step and examine what this algorthm calculates in detail. 
+BEWARE!!! There be maths beyond this point. We will go through the flow diagram step by step and examine what this algorthm calculates in detail. 
 
 **Set Up**\
-In this section (see CompRhoG.c), we set the parameters of  $t$- $t'$- $t''$- $J$ model,  such as the $N_\omega$ the size of frequency grid, the number of sites $N_k$ per dimension, density $n_d$, temperature $\tau$, etc. We also compute the data array for $\omega$ and $\vec{k}$ and various properties of the system; Fermi Energy, $E_F$; and Fermi momentum, $k_F$.
+In this section (see CompRhoG.c), we set the parameters of  $t$- $t'$- $t''$- $J$ model,  such as the $N_\omega$ the size of frequency grid, the number of sites $N_k$ per dimension, density $n_d$, temperature $\tau$, etc. We also compute the array for $\omega$ and $\vec{k}$ and various properties of the system such as the Fermi Energy, $E_F$ and the Fermi momentum, $k_F$.
 
 **Initial Green's Function**\
 The initial auxillary Green's function, $g_0$,  is an initial for the spectral function $\rho_\mathbf{g}(k)$ using Lorentz function in the form:
@@ -167,7 +167,7 @@ In this section we compute the real part of the self energies using Hilbert tran
 H[\rho_\mathbf{g}] = \text{P.V.} \int^{\infty}_{-\infty}\frac{\rho_{\mathbf{g}}(\vec{k},\nu)}{\omega - \nu} \mathrm{d}\nu
 ```
 
-where we plug in the spectral fucntion $`\rho_g = -1/\pi \Im m\{\mathbf{g}\}`$ and we get out $`\text{re}_\mathbf{g} = \Re e\{\mathbf{g}\} = H[\rho_\mathbf{g}]`$ where $`\displaystyle \text{re}_{\mathbf{g}}(\vec{k},\omega)`$ is the in-program notation the real part of the Green's function.
+where we plug in the spectral function $`\rho_g = -1/\pi \Im m\{\mathbf{g}\}`$ and we get out $`\text{re}_\mathbf{g} = \Re e\{\mathbf{g}\} = H[\rho_\mathbf{g}]`$ where $`\displaystyle \text{re}_{\mathbf{g}}(\vec{k},\omega)`$ is the in-program notation the real part of the Green's function.
 
 
 Using convolution theorem, we can evalute this intergal using Fourier transformations:
@@ -225,7 +225,7 @@ In this algorithm, we do not directly calculate $\mathcal{G}$ and $\mathbf{g}$. 
 ```
 Conventionally, we decompose complex functions using the notation $\Sigma = \Sigma' +i \Sigma''$  where $`\Sigma' \equiv \Re e\{ \Sigma \}`$ and $`\Sigma'' \equiv \Im m \{ \Sigma \}`$.  In program, we use the notation  $`\text{re}_\Sigma = \Re e \{ \Sigma \}`$ and $`\rho_{\Sigma} = - 1/ \pi \Im m\{ \Sigma \}`$. 
 
-The Green's fucntions  of ECFL theory in terms of their spectral function and real part are:
+The Green's functions  of ECFL theory in terms of their spectral function and real part are:
 
 ```math
 \begin{align*}
@@ -299,7 +299,7 @@ if (U0SUMRULE == ON) // ON --> u0 sum rules, OFF --> particle sum rules
 That is when  ``U0SUMRULE == ON``, we use the u0 sum rules, otherwise we use the particle sums. 
 
 **Tukey Window**\
-In this section, we setup a high frequency cutoff on the spectral function $\rho_\mathbf{g}$. (See Ref.[^MS] for further details and motivation.) The modified spectral fucntion is defined as  
+In this section, we setup a high frequency cutoff on the spectral function $\rho_\mathbf{g}$. (See Ref.[^MS] for further details and motivation.) The modified spectral function is defined as  
 ```math
 \hat{\rho}_{\mathbf{g}}(k) = \frac{1}{N}W_T(\omega - \bar{\epsilon}_{\vec{k}}) \rho_g
 ```
