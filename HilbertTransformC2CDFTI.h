@@ -32,7 +32,7 @@
 
 
 MKL_Complex16 hilbert_sign_fct(int i, size_t *Npad) {
-    return -I * M_PI * intSgn(i) * intSign( (int) NpadHT[2] / 2 - i - 1);
+    return -I * M_PI * intSgn(i) * intSign( (int) Npad[2] / 2 - i - 1);
 }
 
 

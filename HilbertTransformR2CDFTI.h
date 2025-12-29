@@ -35,8 +35,8 @@ void Hilbert_sign_fct(void *in, size_t *Nhalfcmplx)
      double complex *product = (double complex *) in;
      int k;
      for (k = 0; k < Nhalfcmplx[2]; k++) {
-        product[k] *= -I * M_PI * intSgn(k) * intSign((int) Nhalfcmplx[2] - k - 2);
-    }
+         product[k] *= -I * M_PI * intSgn(k) * intSign((int) Nhalfcmplx[2] - k - 2);
+     }
 }
 
 struct HilbertParams
