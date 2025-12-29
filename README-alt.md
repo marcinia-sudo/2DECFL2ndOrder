@@ -1,9 +1,9 @@
 # 2DECFL2ndOrder
-The $t$ - $J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of lattice Fermions in the $t$ - $J$ model[^2].  
+The $t$ - $J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of lattice Fermions in the $t$ - $J$ model[^MS].  
 
-This progam computes the one-electron Green's function characterized by two-dimensional ECFL theory to 2nd order in the [$\lambda$ expansion](https://doi.org/10.1016/j.aop.2015.03.010) as detailed in Ref.[^1]. 
+This progam computes the one-electron Green's function characterized by two-dimensional ECFL theory to 2nd order in the [$`\lambda`$ expansion](https://doi.org/10.1016/j.aop.2015.03.010) as detailed in Ref.[^PS]. 
 
-This program follows the minimal theory for two-dimensional ECFL as explored in Ref.[^2].  This program has been benchmarked in several studies including one on the elastoresistivity of very strongly correlated metals in two-dimensions as seen in Ref.[^3], the dielectic response in two-dimensional strongly correlated metals as shown in Ref.[^4], and the normal-state resistivity of cuprate superconductors (see Ref.[^5]). 
+This program follows the minimal theory for two-dimensional ECFL as explored in Ref.[^MS].  This program has been benchmarked in several studies including one on the elastoresistivity of very strongly correlated metals in two-dimensions as seen in Ref.[^AS], the dielectic response in two-dimensional strongly correlated metals as shown in Ref.[^SA], and the normal-state resistivity of cuprate superconductors (see Ref.[^SAS]). 
 
 
 # The spectral function of ECLF theory
@@ -24,17 +24,19 @@ $ make CompRhoGParams
 
  
 # Usage
-$d$, the exponent for the frequency grid 
-$N_\omega = 2^d$ is the size of $\omega$, the frequency grid
-$N_k$ is the number lattice site per dimension
-$n_d$ is the electron density per site
-$\tau$ is the natural temperature (units $t$)
-$t$ is the first neighbor hopping parameter
-$t'$, i.e. $tp$, is the second neighbor hopping parameter (units $t$) 
-$t''$, i.e., $tpp$, is the third neighbor hopping parameter (units $t$)
-$J$ is the value of the exchange parameter (units $t$)
-$\mu'$, i.e. $mup$,  is first chemical potential (units $t$)
-$u_0$, i.e. $u0$, is second chemical potential (units $t$)
+
+$d$, the exponent for the frequency grid \
+$N_\omega = 2^d$ is the size of the $\omega$ array which sets the linear density of the frequency grid\
+$N_k$ is the number lattice site per dimension\
+$n_d$ is the electron density per site\
+$\tau$ is the natural temperature (units $t$)\
+$t$ is the first neighbor hopping parameter\
+$t'$, i.e. $tp$, is the second neighbor hopping parameter (units $t$) \
+$t''$, i.e., $tpp$, is the third neighbor hopping parameter (units $t$)\
+$J$ is the value of the exchange parameter (units $t$)\
+$\mu'$, i.e. $mup$,  is the first (effective) chemical potential (units $t$)\
+$u_0$, i.e. $u0$, is a second chemical potential (units $t$)\
+$\eta$, i.e, neta, controls the width of the inital Green's function 
 $dom$ is the size of the $\omega$ domain
 
 
@@ -113,15 +115,14 @@ In this section (see CompRhoG.c), we set the parameters of  $t$- $t'$- $t''$- $J
 
 The initial auxillary Green's function, $g_0$,  is an initial for the spectral function $\rho_\mathbf{g}(k)$ using Lorentz function in the form:
 
-$$
+```math
 \mathbf{g}_0(\vec{k}, \omega ) = \frac{1}{\pi}\frac{\Gamma / 2}{(x - x_0)^2 + (\Gamma/2)^2}
-$$
+```
 
 where $x=\omega$, $x_0 = \epsilon_k - \mu'_0$, and $\Gamma = 2^{\eta}\Delta \omega$. In terms of the program parameters $\mu'_o$ is *mup_initial* and $\eta$ is *neta*.  
 
-**Self Energies**
-
-In the header file, SelfEnergyR2CDFTIchi.h, we compute the self energies, $\displaystyle \psi(\vec{k},\omega )$ and $\displaystyle \chi(\vec{k}, \omega )$, up to 2nd order in the $\lambda$ expansion. We will explain the motivation for calculating these self energies in the sections that follow. For now we will concern ourselves with their calculation. Specifically we calculate $\psi$ from Eq. 65(a) and  $\chi$ from Eqs. 66(a) & 66(b) and Eq. 67(a) of Ref.[^1]. We apply following change of variables $k=k'$, $p=p'$, and $q=p'+q'-k'$ to the self-energies, and drop the prime afterwards, to obtain the following equations:
+**Self Energies**\
+In the header file, SelfEnergyR2CDFTIchi.h, we compute the self energies, $\displaystyle \psi(\vec{k},\omega )$ and $\displaystyle \chi(\vec{k}, \omega )$, up to 2nd order in the $\lambda$ expansion. We will explain the motivation for calculating these self energies in the sections that follow. For now we will concern ourselves with their calculation. Specifically we calculate $\psi$ from Eq. 65(a) and  $\chi$ from Eqs. 66(a) & 66(b) and Eq. 67(a) of Ref.[^PS]. We apply following change of variables $k=k'$, $p=p'$, and $q=p'+q'-k'$ to the self-energies, and drop the prime afterwards, to obtain the following equations:
 
 ```math
 \begin{align*}
@@ -134,7 +135,9 @@ In the header file, SelfEnergyR2CDFTIchi.h, we compute the self energies, $\disp
 
 where 
 
-$$ \sum_{k} = \frac{1}{\beta N_k^2} \sum_{\vec{k},\omega_k} $$
+```math
+\sum_{k} = \frac{1}{\beta N_k^2} \sum_{\vec{k},\omega_k}
+```
 
 $\epsilon_{\vec{k}}$ is the band energy, and $\displaystyle J_{\vec{k}} = 2 J \cos(k_x) + 2J \cos(k_y)$ and hence $\displaystyle J_{\vec{k}} = J_{-\vec{k}}$. To calculate the self-energy, we must express the green function $\mathbf{g}$ in terms of its spectral functions $`\rho_\mathbf{g} = -1/\pi \Im m \{ \mathbf{g} \}`$:
 
@@ -163,8 +166,7 @@ where $\Sigma$ is an arbitary self-energy in form of a double convoluted integra
 
 where $\mathcal{F}$ is the Fourier transform operator, $\mathcal{F^{-1}}$ is its inverse, $\bar{\mathcal{F}}$ is its complex conjugate and the shorthand $$\displaystyle l \equiv (\vec{l}, s) \to (p + q - k, u + v -\omega )$$ . We use DFTI fast Fourier transformation algorithm contained in mkl library to compute the Fourier transforms.
 
-**Hilbert Transformation**
-
+**Hilbert Transformation**\
 In this section we compute the real part of the self energies using Hilbert transformation. The Green's function is complex function of the form $\mathbf{g} = \mathbf{g}' + i \mathbf{g}''$ where $`\mathbf{g}' \equiv \Re e\{\mathbf{g}\}`$ and $`\mathbf{g}'' \equiv \Im m \{\mathbf{g}\}`$.  The Hilbert transformation is defined as 
 
 ```math
@@ -191,124 +193,125 @@ i \;\; &\text{if} &\omega < 0  \\
 ```
 where $\text{sgn}(\omega)$ is the signum function.
 
-**Greens' Functions**
-
+**Greens' Functions**\
 In the section, we calculate a canonical-like green's function $\mathbf{g}$ and the ECFL Green's function $\mathcal{G}$ to second order in the $\lambda$ expansion. 
 
 In brief,  the one-electron Greens functions in ECFL theory for momentum space is defined as
-$$
+```math
 \mathcal{G}(\vec{k}, \omega) = \mathbf{g}(k) \times \tilde{\mu}(k) 
-$$
-where $k \equiv(\vec{k}, i\omega_n)$ and $\omega_n = (2n +1) k_B T$ is the Matsubara frequency. We note that $\mathbf{g}(k)$ is the canonical electron propagator and $\tilde{\mu}$ is an adaptive spectral weight. These two equations are defined, respectively, as:
-$$
+```
+where $\displaystyle k \equiv(\vec{k}, i\omega_n)$ and $\omega_n = (2n +1) k_B T$ is the Matsubara frequency. We note that $\mathbf{g}(k)$ is the canonical electron propagator and $\tilde{\mu}$ is an adaptive spectral weight. These two equations are defined, respectively, as:
+```math
 \mathbf{g}^{-1} =\mathbf{g}^{-1}_0+ \frac{\lambda}{2}\gamma J_0+ \lambda\gamma\epsilon_{\vec{k}} -\lambda\phi(k)\;,
-$$ 
-$$
+```
+```math
 \tilde{\mu} = 1 - \lambda \gamma + \lambda \Psi(k),
-$$
-where $\mathbf{g}^{-1}_0 = i\omega_k + \mu - \epsilon_{\vec{k}}$,  the self energy $\gamma = n/2$,  $\epsilon'_k = \epsilon_{\vec{k}} - \frac{u_0}{2}$, and the self-energy $\phi(k) = \chi(k) + \epsilon'_{\vec{k}}\psi(k)$ can be separated into a self energy part $\chi(k)$ and the second self energy $\psi(k)$.
+```
+where $`\displaystyle \mathbf{g}^{-1}_0 = i\omega_k + \mu - \epsilon_{\vec{k}}`$,  the self energy $`\displaystyle \gamma = n/2`$,  $`\displaystyle \epsilon'_{\vec{k}} = \epsilon_{\vec{k}} - \frac{u_0}{2}`$, and the self-energy $`\displaystyle \phi(k) = \chi(k) + \epsilon'_{\vec{k}}\psi(k)`$ can be separated into a self energy part $\chi(k)$ and the second self energy $\psi(k)$.
 
 In the second order approximation $\mathcal{O}(\lambda^2)$ the self energies are $\psi = \psi_{[0]} + \lambda\psi_{[1]}$ and $\chi = \chi_{[0]} + \lambda\chi_{[1]}$ where the index denotes the order of $\lambda$ and $\lambda=1$.  The self energy coefficients $\psi_{[i]}$ and $\chi_{[i]}$  are explicitly defined as 
-$$
+```math
 \begin{align*}
 \psi_{[0]} &= 0\;\;  \text{and } \;\; \chi_{[0]} = \chi_{[0]}^{66(a)} \\
 \psi_{[1]} &= \psi_{[1]}^{65(a)} \text{and} \;\; \chi_{[1]} = \chi_{[1]}^{66(b)} + \chi_{[1]}^{67(a)}\;.
 \end{align*}
-$$
+```
 So the second order calculation is
-$$
-\mathbf{g}(k)  = \mathbf{g}^{-1}_0 + \lambda \frac{n}{2}\epsilon_k' + \lambda \frac{n}{4}J_0 - \lambda\chi_{[0]}(k) - \lambda^2\chi_{[1]}(k) - \lambda^2 \psi_{[1]}(k) \\
-$$
+```math
+\mathbf{g}(k)  = \mathbf{g}^{-1}_0 + \lambda \frac{n}{2}\epsilon_k' + \lambda \frac{n}{4}J_0 - \lambda\chi_{[0]}(k) - \lambda^2\chi_{[1]}(k) - \lambda^2 \psi_{[1]}(k)
+```
 
-$$
+```math
 \tilde{\mu}(k) = 1 - \lambda \gamma + \lambda \psi_{[1]}(k)\;.
-$$
+```
 
-In this algorithm, we do not directly calculate $\mathcal{G}$ and $\mathbf{g}$. We calculate its spectral function $\rho_\mathcal{G} = - \frac{1}{\pi}\Im m\{\mathcal{G}\}$ and reconstruct its complex form with the relation
-$$
+In this algorithm, we do not directly calculate $\mathcal{G}$ and $\mathbf{g}$. Rather we calculate their spectral function $`\rho_\mathcal{G} = - \frac{1}{\pi}\Im m\{\mathcal{G}\}`$ and reconstruct its complex form with the relation
+```math
 \mathcal{G}(\vec{k},i\omega_k) = \int^{\infty}_{-\infty} \frac{\rho_{\mathcal{G}}(\vec{k}, \nu)}{i\omega_k - \nu}d\nu\;.
-$$
-Conventionally, we decompose complex functions using the notation $\Sigma = \Sigma' +i \Sigma''$  where $\Sigma' \equiv \Re e\{ \Sigma \}$ and $\Sigma'' \equiv \Im m \{ \Sigma \}$.  In program, we use the notation  $\text{re}_\Sigma = \Re e \{ \Sigma \}$ and $\rho_{\Sigma} = - 1/ \pi \Im m\{ \Sigma \}$. 
+```
+Conventionally, we decompose complex functions using the notation $\Sigma = \Sigma' +i \Sigma''$  where $`\Sigma' \equiv \Re e\{ \Sigma \}`$ and $`\Sigma'' \equiv \Im m \{ \Sigma \}`$.  In program, we use the notation  $`\text{re}_\Sigma = \Re e \{ \Sigma \}`$ and $`\rho_{\Sigma} = - 1/ \pi \Im m\{ \Sigma \}`$. 
 
 The Green's fucntions  of ECFL theory in terms of their spectral function and real part are:
 
-$$
+```math
 \begin{align*}
 \text{re}_\mathbf{g}(\vec{k},\omega) &= \frac{x}{x^2 + (\pi \rho_\phi)^2}\;, \\
 \rho_\mathbf{g}(\vec{k},\omega) &= \frac{\rho_\phi}{x^2 + (\pi\rho_\phi)^2}\;, \\
 \text{re}_{\mathcal{G}}(\vec{k},\omega) &= \text{re}_\mathbf{g} (1 - \lambda \gamma + \text{re}_\psi ) - \pi^2 \rho_\mathbf{g}\, \rho_\psi\;, \\
 \rho_\mathcal{G}(\vec{k},\omega) &= \rho_\mathbf{g}  (1 - \lambda \gamma + \text{re}_\psi) + \text{re}_\mathbf{g} \, \rho_\psi\;, \\
 \end{align*}
-$$
-where $\rho_\phi = \rho_\chi + \epsilon_{\vec{k}}\,\rho_\psi$ is spectral function for the canonical-like self energy, $\text{re}_\phi = \text{re}_{\chi} + \epsilon_{\vec{k}}\,\text{re}_\psi$ is its real part, and $x = \omega + \mu' - \xi_{\vec{k}} - \text{re}_\phi$. The effective band energy is
-$$
+```
+where $`\displaystyle \rho_\phi = \rho_\chi + \epsilon_{\vec{k}}\,\rho_\psi`$ is spectral function for the canonical-like self energy, $`\displaystyle \text{re}_\phi = \text{re}_{\chi} + \epsilon_{\vec{k}}\,\text{re}_\psi`$ is its real part, and $`\displaystyle x = \omega + \mu' - \xi_{\vec{k}} - \text{re}_\phi`$. The effective band energy is
+```math
 \xi_{\vec{k}}  = \epsilon_k ( 1 - \lambda \gamma) - \frac{1}{2}  \sum_k \mathbf{g}(k) J_{k-p}
-$$ 
+```
 and the effective chemical potential is
-$$
+```math
 \mu' = \mu - \lambda \gamma \frac{u_0}{2} + \lambda \gamma \frac{J_0}{2} + \sum_k \mathbf{g}(k)  \bigg ( \epsilon_k - \frac{u_0}{2}\bigg )\;.
-$$
+```
 
 **Sum Rules**
+
 In this section, we use a root finding program to find the chemical potentials $\mu'$ and $u_0$ that satisfies two sum rules using a multiroot finder header file.  In this program, we have two choices for the sum rules: 
 
 1)  The particle sum rules which defined as 
-$$
+```math
 \sum_k\mathcal{G}(k)e^{i\omega_k0^+} =  n/2 = \sum_k \mathbf{g}(k)e^{i\omega_k0^+}\;.
-$$
-2)  The $u_0$ sum rules which are defined as 
-$$ 
+```
+2)  The $u_0$ sum rules which are defined as
+```math
 \begin{align*}
 \sum_k \mathcal{G}(k) e^{i\omega_k0^+} &= n/2 \\
 \sum_k \mathcal{G}(k) \bigg ( \omega + \mu - \epsilon_k \bigg )e^{i\omega0^{+}}  & = - J n^2 / 2
 \end{align*}
-$$
+```
 where $\mu$ the chemical potential is
-$$
+```math
 \mu = \mu' + \lambda \gamma \frac{u_0}{2} - \lambda \gamma \frac{J_0}{2} - \sum_k \mathbf{g}(k)  \bigg ( \epsilon_k - \frac{u_0}{2} \bigg )\;,
-$$
+```
 where we note that 
-$$
+```math
 \sum_k g(k) \equiv \frac{1}{N_s}\sum_{\vec{k}} \int^{\infty}_{-\infty}{\rho_g}(\vec{k},\omega)n_F(\omega)d\omega\;. 
-$$
-Now we will give a brief aside to explain how the effective chemical potential $\mu'$ is defined in our program.  The auxillary green function $\mathbf{g}(k)$ second order $\mathcal{O}(\lambda^2)$ approximations is defined as
-$$
+```
+Now we will give a brief aside to explain how the effective chemical potential $\mu'$ is defined in our program.  The auxillary Green's function $\mathbf{g}(k)$ in the second order approximation $\mathcal{O}(\lambda^2)$ is defined as
+
+```math
 \mathbf{g}(k)  = \mathbf{g}^{-1}_0 + \lambda \frac{n}{2}\epsilon_k' + \lambda \frac{n}{4}J_0 - \lambda\chi_{[0]}(k) - \lambda^2\chi_{[1]}(k) - \lambda^2 \epsilon_k'\psi_{[1]}(k) \\
-$$
+```
+
 where $\gamma = n/2$, and 
-$$
+
+```math
 \chi_{[0]} = -\sum_{k}\mathbf{g}(k) \bigg ( \epsilon_k - \frac{u_0}{2} + \frac{1}{2}J_{k-p} \bigg )\;.
-$$
+```
 
 We can write the auxillary Green's function in more succint form as
-$$
-\mathbf{g}(k)  = i\omega_k + \mu' - \xi_k - \lambda^2 \phi_{[1]}(k) \\
-$$
-where $\mu'$ is the effective chemical potential and $\xi_k$ is the effective band energy.  In our program the effective chemical potential $\mu'$, i.e, in terms of parameters *mup*, is defined as
-$$
+```math
+\mathbf{g}(k)  = i\omega_k + \mu' - \xi_k - \lambda^2 \phi_{[1]}(k)
+```
+where $\mu'$ is the effective chemical potential and $\xi_k$ is the effective band energy.  In our program the effective chemical potential $\mu'$, i.e, in-program *mup*, is defined as
+```math
 \mu' = \mu - \lambda \gamma \frac{u_0}{2} + \lambda \gamma \frac{J_0}{2} + \sum_k \mathbf{g}(k)  \bigg ( \epsilon_k - \frac{u_0}{2} \bigg )
-$$
-and the effective band energy $\xi_k$ is
-$$
-\xi_k = \epsilon_k ( 1 - \lambda \gamma) - \frac{1}{2}  \sum_k \mathbf{g}(k) J_{k-p}\;.
-$$
-
-
-
+```
+and the effective band energy $\xi_{\vec{k}}$ is
+```math
+\xi_\vec{k} = \epsilon_\vec{k} ( 1 - \lambda \gamma) - \frac{1}{2}  \sum_k \mathbf{g}(k) J_{\vec{k}-\vec{p}}\;.
+```
 
 
 We can toggle between these two different sum rules with the following code found in the **Set Up** section:
-```
+```c
 if (U0SUMRULE == ON) // ON --> u0 sum rules, OFF --> particle sum rules
 ```
 That is when  ``U0SUMRULE == ON``, we use the u0 sum rules, otherwise we use the particles sums. 
 
 **Window Tukey**
-In this section, we setup a high frequency cutoff on the spectral function $\rho_\mathbf{g}$. (See Ref. (3) for further details and motivation). The  
-$$
-\hat{\rho}_{\mathbf{g}}(k) = \frac{1}{N}W_T(\omega - \bar{\epsilon}_k) \rho_g
-$$
-where $W_T$, called the tukey window, is a smooth even function that is centered on the spectral peak, $\bar{\epsilon}_k$, of the spectral function $\rho_g(k)$. The factor $N_k$ is the normalization condition $\int \hat{\rho}_{\mathbf{g}}(\vec{k},\omega) \mathrm{d}\omega=1$.
+
+In this section, we setup a high frequency cutoff on the spectral function $\rho_\mathbf{g}$. (See Ref.[^MS] for further details and motivation.) The  
+```math
+\hat{\rho}_{\mathbf{g}}(k) = \frac{1}{N}W_T(\omega - \bar{\epsilon}_\vec{k}) \rho_g
+```
+where $W_T$, called the tukey window, is a smooth even function that is centered on the spectral peak, $`\bar{\epsilon}_{\vec{k}}`$, of the spectral function $`\rho_g(k)`$. The factor $N_k$ is the normalization condition $`\displaystyle \int \hat{\rho}_{\mathbf{g}}(\vec{k},\omega) \mathrm{d}\omega=1`$.
 
 In the set up phase, we can toggle this feature with the following code:
 ```c
@@ -317,17 +320,23 @@ if (TUKEY == ON) // ON --> TUKEY WINDOW, OFF --> NO TUKEY WINDOW
 
 
 **Weighted Average**
-In this section, we calculate the weighted average spectral function $\bar{\rho}_{g}(k)$ from pervious and current spectral fucntions; $\rho_{\mathbf{g}}^{i}$ and  $\rho_{\mathbf{g}}^{i+1}$, respectively, as follows: 
-$$
+
+In this section, we calculate the weighted average spectral function $\bar{\rho}_{g}(k)$ from pervious and current spectral fucntions; $`\rho_{\mathbf{g}}^{i}`$ and  $`\rho_{\mathbf{g}}^{i+1}`$, respectively, as follows: 
+```math
 \bar{\rho}_{\mathbf{g}}^{\;i+1}(k) = w \rho_{g}^{i}(k) +  (1 - w) \rho^{i+1}_{\mathbf{g}} 
-$$
+```
 where $w$ is the weight where $0 \leq w < 1$ and $w = 1/\sqrt{3}$ is a typical choice for the weight.
 
 **Test Convergence condition**
-We are satisfied that auxillary spectral function $\rho^{i+1}_{\mathbf{g}}(k)$ is converged if $g_{error} = \frac{1}{N_k^2 N_\omega}\sum_{\vec{k}\omega_n}|\rho^{i}_{\mathbf{g}}(\vec{k},\omega_n) -\rho^{i+1}_{\mathbf{g}}(\vec{k},\omega_n)| < 10^{-6}$ where $\omega_n$ is the index for the freqency grid. If true, we exit the loop and goto **Compute Data** section. If false we send $\bar{\rho}_\mathbf{g}^{\;i+1}$ back to **Compute Self Energies** section.[^1] 
+
+We are satisfied that auxillary spectral function $`\rho^{i+1}_{\mathbf{g}}(k)`$ is converged if 
+```math
+g_{error} = \frac{1}{N_k^2 N_\omega}\sum_{\vec{k}\bar{\omega}_n}|\rho^{i}_{\mathbf{g}}(\vec{k},\bar{\omega}_n) -\rho^{i+1}_{\mathbf{g}}(\vec{k},\bar{\omega}_n)| < 10^{-6}
+```
+where $`\bar{\omega}_n`$ is the index for the freqency grid. If true, we exit the loop and goto **Compute Data** section. If false we send $`\bar{\rho}_\mathbf{g}^{\;i+1}`$ back to **Compute Self Energies** section.[^PS] 
 
 **Compute Data**
-In this section we calculate $\rho_\mathcal{G}$ and we calcualate various properties of system with extremely strong correlations as characterized by the $t$-$J$ Model.  The data exported to directory *Data* and mathematica notebook we a few example plots. 
+In this section we calculate $\rho_\mathcal{G}$ and we calcualate various properties of system with extremely strong correlations as characterized by the $t$ - $J$ Model.  The data exported to directory *Data* and mathematica notebook we a few example plots. 
 
 
 # LICENSE
@@ -335,8 +344,8 @@ GSL
 
 # Bibliography
 
-[^1]: E. Perepelitsky and B. S. Shastry, [Ann. Phys. **357**, 1-39 (2015)](https://doi.org/10.1016/j.aop.2015.03.010)
-[^2]: P. Mai and B. S. Shastry, [New J. Phys **20** (2018) 013027](  https://doi.org/10.1088/1367-2630/aa9b74)
-[^3]: M. Arciniaga, P. Mai, and B. S. Shastry [Phys. Rev. B. **101**, 2451149 (2020)](https://doi.org/10.1103/PhysRevB.101.245149)
-[^4]: B.S. Shastry and M. Arciniaga, [Ann. Phys. **442** (2022) 168924](https://doi.org/10.1016/j.aop.2022.168924)
-[^5]: S. Shears, M. Arciniaga, and B. S. Shastry [Phys. Rev. B **111** 245146](https://doi.org/10.1103/89cj-5qhs)
+[^PS]: E. Perepelitsky and B. S. Shastry, [Ann. Phys. **357**, 1-39 (2015)](https://doi.org/10.1016/j.aop.2015.03.010)
+[^MS]: P. Mai and B. S. Shastry, [New J. Phys **20** (2018) 013027](  https://doi.org/10.1088/1367-2630/aa9b74)
+[^AMS]: M. Arciniaga, P. Mai, and B. S. Shastry [Phys. Rev. B. **101**, 2451149 (2020)](https://doi.org/10.1103/PhysRevB.101.245149)
+[^SA]: B.S. Shastry and M. Arciniaga, [Ann. Phys. **442** (2022) 168924](https://doi.org/10.1016/j.aop.2022.168924)
+[^SAS]: S. Shears, M. Arciniaga, and B. S. Shastry [Phys. Rev. B **111** 245146](https://doi.org/10.1103/89cj-5qhs)
