@@ -1,9 +1,9 @@
 # 2DECFL2ndOrder
-The $t$ - $J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of the lattice Fermions in the $t$ - $J$ model[^S].  
+The $t$ - $J$ model in two dimensions is consider to be of fundamental to understanding the strongly correlated matter, including high $T_c$ superconductors. In a nutshell *extremely correlated Fermi liquid* (ECFL) theory is an analytically method that uses the Schwinger's technique of functional differential equations to obtain a Green's function that captures the physics of very strong correlations of the lattice Fermions in the $t$ - $J$ model[^S].  
 
 This progam computes the one-electron Green's function characterized by two-dimensional ECFL theory to 2nd order in the [$`\lambda`$ expansion](https://doi.org/10.1016/j.aop.2015.03.010) as detailed in Ref.[^PS]. 
 
-This program follows the minimal theory for two-dimensional ECFL as explored in Ref.[^MS].  This program has been benchmarked in several studies including one on the elastoresistivity of very strongly correlated metals in two-dimensions as seen in Ref.[^AMS], the dielectic response in two-dimensional strongly correlated metals as shown in Ref.[^SA], and the normal-state resistivity of cuprate superconductors (see Ref.[^SAS]) where python notebooks containing the resistivity data for Tl2201, Bi2201 and Hg1201 cuprates and others are accessible from Ref.[^Zen]).
+This program follows the minimal theory for two-dimensional ECFL as explored in Ref.[^MS].  This program has been benchmarked in several studies including one paper on the elastoresistivity of very strongly correlated metals in two-dimensions as seen in Ref.[^AMS], another on the dielectic response in two-dimensional strongly correlated metals as shown in Ref.[^SA], and a study on the normal-state resistivity of cuprate superconductors (see Ref.[^SAS]) which includes python notebooks containing the resistivity data for Tl2201, Bi2201 and Hg1201 cuprates and others are accessible from Ref.[^Zen].
 
 
 # The spectral function of ECLF theory
@@ -297,8 +297,8 @@ if (U0SUMRULE == ON) // ON --> u0 sum rules, OFF --> particle sum rules
 ```
 That is when  ``U0SUMRULE == ON``, we use the u0 sum rules, otherwise we use the particle sums. 
 
-**Window Tukey**\
-In this section, we setup a high frequency cutoff on the spectral function $\rho_\mathbf{g}$. (See Ref.[^MS] for further details and motivation.) The  
+**Tukey Window**\
+In this section, we setup a high frequency cutoff on the spectral function $\rho_\mathbf{g}$. (See Ref.[^MS] for further details and motivation.) The modified spectral fucntion is defined as  
 ```math
 \hat{\rho}_{\mathbf{g}}(k) = \frac{1}{N}W_T(\omega - \bar{\epsilon}_{\vec{k}}) \rho_g
 ```
