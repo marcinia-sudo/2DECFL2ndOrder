@@ -72,12 +72,13 @@ SelfEnergyR2CDFTIchi.h | A computation of the self energies equations of ECFL 2D
 **RAM Requirements**\
 The RAM usage in bytes on a single machine with shared memory scales approximately like
 
-$$
+```math
 \begin{align*}
-\text{mem} &= 8 \cdot [22 \cdot  N_k^2 N_\omega + 60 \cdot N_k^2 (4 N_\omega / 2 +1)  ] \\
-&\approx 1136  \cdot N_k^2N_\omega\;.
+\text{mem} &= 8 \cdot [22 \cdot  N_k^2 N_\omega + 30 \cdot N_k^2 (4 N_\omega + 2)  ] \\
+&\approx 1136  \cdot N_k^2N_\omega\;,
 \end{align*}
-$$
+```
+where there are $22$ arrays of length $N_\omega N_k^2$ with type double and 30 arrays of length  $N_k^2(2N_{\omega}+1)$ of type complex double. 
 
 ## Flow Diagram
 
